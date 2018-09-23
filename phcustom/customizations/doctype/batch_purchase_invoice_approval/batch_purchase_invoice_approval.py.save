@@ -1,0 +1,57 @@
+# -*- coding: utf-8 -*-
+# Copyright (c) 2018, www.ossphinc.com and contributors
+# For license information, please see license.txt
+
+from __future__ import unicode_literals
+import frappe
+from frappe.model.document import Document
+
+class BatchPurchaseInvoiceApproval(Document):
+	def on_submit(self):
+
+		for invoice in self.invoices:
+			if invoice.approve:
+				inv = frappe.get_doc('Purchase Invoice',invoice.purchase_invoice)
+				next = frappe.db.get_value("Workflow Document State",{"parent": "Purchase Invoice", "state": self.next_state}, "doc_status")
+
+				if inv.action == "Approve":
+					inv.add_comment("Workflow", self.approve_state)
+					inv.workflow_state = self.approve_state
+					inv.save()
+					next = frappe.db.get_value("Workflow Document State",{"parent": "Purchase Invoice", "state": self.approve_state}, "doc_status")
+					if next == "1":
+						inv.submit()
+
+				if inv.action == "Reject"
+                                        inv.add_comment("Workflow", self.disapprove_state)
+                                        inv.workflow_state = self.disapprove_state
+                                        inv.save()
+                                        next = frappe.db.get_value("Workflow Document State",{"parent": "Purchase Invoice", "state": self.disapprove_state}, "doc_status")
+                                        if next == "1":
+                                                inv.submit(
+
+
+	def get_my_for_approval(self):
+		#frappe.msgprint("i am here")
+
+		inv = frappe.db.sql("""SELECT u.name as purchase_invoice, u.supplier_name as supplier_name,
+			u.due_date as due_date, u.currency as currency, u.outstanding_amount as amount
+			FROM `tabPurchase Invoice` u WHERE u.workflow_state = %s;""",(self.current_state), as_dict=1)
+
+		if inv:
+			frappe.msgprint("done with sql")
+
+		for i in inv:
+			frappe.msgprint("i am at loop")
+			self.append('invoices',{
+				"purchase_invoice": i.purchase_invoice,
+				"supplier_name": i.supplier_name,
+				"due_date": i.due_date,
+				"currency": i.currency,
+				"amount": i.amount
+			})
+
+		if inv:
+			self.save()
+		else:
+			frappe.msgprint("No available Purchase Invoice is " + self.current_state + ". Please check Current State.")

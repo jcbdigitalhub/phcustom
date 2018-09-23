@@ -1,0 +1,50 @@
+// Copyright (c) 2018, www.ossphinc.com and contributors
+// For license information, please see license.txt
+
+frappe.ui.form.on('Batch Purchase Invoice Approval', {
+	refresh: function(frm) {
+
+	},
+ion(frm) {
+                cur_frm.call('get_details','', function(r){ cur_frm.cscript.refresh  }
+                );
+        },
+/*
+	on_submit: function(frm) {
+		$.each(frm.doc.invoices, function(i, d) {
+			console.log("i am here");
+			frappe.call({
+       				method: "frappe.client.get",
+        			args: {
+        			    doctype: "Purchase Invoice",
+        			    name: d.purchase_invoice,
+       				 },
+        			callback(data) {
+					r =  data.message;
+					console.log(r);
+         				var new_state = frappe.workflow.get_document_state('Purchase Invoice', frm.doc.next_state);
+					var new_docstatus = cint(new_state.doc_status);
+					if(new_state.update_field) {
+						d.set_value(new_state.update_field, new_state.update_value);
+					}
+					r.timeline.insert_comment("Workflow", frm.doc.next_state);
+
+					if(new_docstatus==1 && r.docstatus==0) {
+						r.savesubmit(null, success, on_error);
+					} else if(new_docstatus==0 && r.docstatus==0) {
+						r.save("Save", success, null, on_error);
+					} else if(new_docstatus==1 && r.docstatus==1) {
+						r.save("Update", success, null, on_error);
+					} else if(new_docstatus==2 && r.docstatus==1) {
+						r.savecancel(null, success, on_error);
+					} else {
+						return false;
+					}
+        			}
+    			});
+
+		});
+
+	}
+*/
+});

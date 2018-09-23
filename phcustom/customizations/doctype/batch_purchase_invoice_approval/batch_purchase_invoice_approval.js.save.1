@@ -1,0 +1,16 @@
+// Copyright (c) 2018, www.ossphinc.com and contributors
+// For license information, please see license.txt
+
+frappe.ui.form.on('Batch Purchase Invoice Approval', {
+	refresh: function(frm) {
+
+	},
+	date: function(frm) {
+                cur_frm.call('get_details','', function(r){ cur_frm.cscript.refresh  }
+                );
+        },
+	action: function(frm,cdt,cdn) {
+		var total_approved = 0 || 0;
+		
+	}
+});
