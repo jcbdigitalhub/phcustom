@@ -27,17 +27,19 @@ class BatchPurchaseInvoiceApproval(Document):
 				if next == "1":
 					inv.submit()
 
-                        if invoice.action == "Reject":
-                                inv = frappe.get_doc('Purchase Invoice',invoice.purchase_invoice)
-                                next = frappe.db.get_value("Workflow Document State",{"parent": "Purchase Invoice", "state": self.disapprove_state}, "doc_status")
+		if invoice.action == "Reject":
+				inv = frappe.get_doc('Purchase Invoice',invoice.purchase_invoice)
+				next = frappe.db.get_value("Workflow Document State",{"parent": "Purchase Invoice", "state": self.disapprove_state}, "doc_status")
 
-                                inv.add_comment("Workflow", self.disapprove_state)
+				inv.add_comment("Workflow", self.disapprove_state)
 
-                                inv.workflow_state = self.disapprove_state
-                                inv.save()
+				inv.workflow_state = self.disapprove_state
+				inv.save()
 
-                                if next == "1":
-                                        inv.submit()
+				if next == "2":
+						frappe.db.sql("""delete from `tabBatch Purchase Invoice Approval Invoices`
+							where docstatus = 1 AND purchase_invoice = %s""", invoice.purchase_invoice)
+						inv.cancel()
 
 	def get_details(self):
 			self.approver = frappe.session.user

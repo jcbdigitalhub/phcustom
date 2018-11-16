@@ -79,12 +79,16 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-#doc_events = {
- 	#"Purchase Invoice": {
+doc_events = {
+ 	"Purchase Invoice": {
+		"before_cancel": "phcustom.api.before_cancel",
  		#"on_update": "phcustom.api.update_budget",
  		#"on_cancel": "phcustom.api.update_budget",
  		#"on_trash": "phcustom.api.update_budget"
-	#},
+	},
+	"Payment Entry": {
+		#"validate": "phcustom.api.payment_entry_validate",
+	},
  	#"Purchase Order": {
  		#"on_update": "phcustom.api.update_budget",
  		#"on_cancel": "phcustom.api.update_budget",
@@ -95,7 +99,7 @@ app_license = "MIT"
  		#"on_cancel": "phcustom.api.update_budget",
  		#"on_trash": "phcustom.api.update_budget"
 	#}
-#}
+}
 
 # Scheduled Tasks
 # ---------------

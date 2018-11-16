@@ -36,13 +36,14 @@ class PaymentEntryBatchApproval(Document):
                                 inv.workflow_state = self.disapprove_state
                                 inv.save()
 
-                                if next == "1":
+                                if next == "2":
                                         inv.submit()
+					inv.cancel()
 
 	def get_details(self):
 			self.approver = frappe.session.user
 			user = frappe.get_doc('User', frappe.session.user)
-			currentstate = user.default_current_state
+			currentstate = user.payment_entry_default_current_state
 			self.current_state = currentstate
 			self.approve_state = user.payment_entry_approve_state
 			self.disapprove_state = user.payment_entry_disapprove_state

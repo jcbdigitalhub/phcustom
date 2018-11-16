@@ -101,3 +101,7 @@ def check_budget(project,amount):
 
 	if balance < 0:
 		frappe.throw(_("Expenses for {0} will exceed budget by {1}. Please review your Project Estimated Cost.").format(project, excess))
+		
+def before_cancel(doc, method):
+	frappe.db.sql("""delete from `tabBatch Purchase Invoice Approval Invoices`
+		where docstatus = 1 AND purchase_invoice = %s""", doc.name)
